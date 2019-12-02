@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
+    <body id="index-body">
+            <header>
+                <nav>
+                    <ul id="menu">
+                        <li id="liste-menu1"><a class="lien-index-menu" href="index.php">Accueil</a></li>
+                        <?php if(isset($_SESSION['login'])): ?>
+                            <?php if($_SESSION['login'] == "admin"): ?>
+                                <li id="liste-menu4"><a class="lien-index-menu" href="admin.php">Admin</a></li>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if(!isset($_SESSION["login"])): ?>
+                            <li id="liste-menu2"><a class="lien-index-menu" href="inscription.php">Inscription</a></li>
+                            <li id="liste-menu5"><a class="lien-index-menu" href="connexion.php">Connexion</a></li>
+                        <?php else : ?>
+                            <li id="liste-menu3"><a class="lien-index-menu" href="profil.php">Profil</a></li>
+                            <li id="liste-menu6" ><a class="lien-index-menu" href="index.php?destroy=die">Déconnexion (<?= $_SESSION["login"] ?>)</a></li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            </header>
+            <main>
+
+<?php
+
+if(isset($_GET["destroy"])){
+    session_destroy();
+    header("Location:index.php");
+}
+
+?>
