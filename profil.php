@@ -2,72 +2,58 @@
 
 session_start();
 
-// Je me connecte a ma base de donnée
 $connexion = mysqli_connect("localhost", "root", "", "moduleconnexion");
-// Je récupère tout mes informations dans ma table utilisateurs quand login est égale au login que je viens de connecter
-$query="SELECT * from utilisateurs WHERE login = '".$_SESSION['login']."' ";
-$resultat=mysqli_query($connexion,$query);
-// J'utilise mysqli_fetch_array qui est similaire a fetch_all mais qui est un tableau un peu différent
-$row=mysqli_fetch_array($resultat);
+$requete="SELECT * from utilisateurs WHERE login = '".$_SESSION['login']."' ";
+$query=mysqli_query($connexion,$requete);
+$resultat=mysqli_fetch_assoc($query);
 
+if(isset($_POST["modifier"])){
+    $requete2 = "UPDATE utilisateurs SET login='".$_POST['login']."', prenom='".$_POST["prenom"]."', nom='".$_POST["nom"]."' WHERE login='".$_SESSION['login']."'";
+
+        if($resultat['login'] != $_POST['login']){
+            mysqli_query($connexion,$requete2);
+            $_SESSION['login'] = $_POST['login'];
+            header('Location:index.php');
+        }
+        else if($resultat["prenom"] != $_POST["prenom"]){
+            mysqli_query($connexion,$requete2);
+            header("Location:index.php");
+        }
+        else if($resultat["nom"] != $_POST["nom"]){
+            mysqli_query($connexion,$requete2);
+            header("Location:index.php");
+        }
+        else if($resultat['password'] != $_POST['password']){
+            if($_POST['password'] != NULL && $_POST["password"] == $_POST["confirmPassword"]){
+                $pass=$_POST['password'];
+                $hash = password_hash($pass, PASSWORD_DEFAULT);
+                $requete2 = "UPDATE utilisateurs SET password='".$hash."' WHERE login = '".$_SESSION['login']."'";
+                mysqli_query($connexion,$requete2);
+                header("Location:index.php"); 
+            } else {
+                $erreur ="Les mots de passes ne correspondent pas";
+            }
+        } else {
+            $erreur = "Erreur lors du changement d'informations";
+        }
+}
 
 require("partials/header.phtml");
 ?>
             <h1 id="title-box3">Modifiez votre profil</h1>
             <form id="form-log" action="profil.php" method="POST">
-                <input class="input-form-log" type="text" name="login" value="<?php echo $row["login"] ?>">
-                <input class="input-form-log" type="text" name="prenom" value="<?php echo $row["prenom"] ?>">
-                <input class="input-form-log" type="text" name="nom" value="<?php echo $row["nom"] ?>">
-                <input class="input-form-log" type="password" name="password" value="<?php echo $row["password"] ?>">
-                <input class="input-form-log" type="password" name="confirmPassword">
+            <?php if(isset($erreur)): ?>
+                <div id="error-mod"><?php echo $erreur; ?></div>
+            <?php endif; ?>
+                <input class="input-form-log" type="text" name="login" placeholder="login" value="<?php echo $resultat["login"] ?>">
+                <input class="input-form-log" type="text" name="prenom" placeholder="prenom" value="<?php echo $resultat["prenom"] ?>">
+                <input class="input-form-log" type="text" name="nom" placeholder="nom" value="<?php echo $resultat["nom"] ?>">
+                <input class="input-form-log" type="password" placeholder="mot de passe" name="password" value="<?php echo $resultat["password"] ?>">
+                <input class="input-form-log" type="password" placeholder="mdp confirm" name="confirmPassword">
                 <button id="sub-form-log" type="submit" name="modifier" value="modifier">Modifier</button>
             </form>
 <?php
 require("partials/footer.phtml");
-
-// Si la variable $_POST["modifier"] contient quelque chose
-if(isset($_POST["modifier"])){
-    // Je me connecte a ma base de donnée
-    $connexion = mysqli_connect("localhost", "root", "", "moduleconnexion");
-    $login = $_POST["login"];
-    $requete2 = "SELECT login FROM utilisateurs WHERE login = \"$login\" ";
-    $query2 = mysqli_query($connexion,$requete2);
-    $resultat2 = mysqli_fetch_all($query2);
-    // Si il y a quelque chose dans ma variable de requete resultat
-    if(!empty($resultat2)){
-        // Alors j'affiche que le login estdeja prit
-        echo "<div id=\"pro-log-used\">Ce login est déjà pris</div>";
-    } // Sinon si le password soumis est différent de la confirmation de password soumise
-    else if ($_POST["password"] != $_POST["confirmPassword"]){
-        // Alors j'affiche que le mots de passe ne correspond pas
-        echo "<div id=\"pro-mdp-false\">Les mots de passe ne correspondent pas</div>";
-    } // Sinon
-    else{
-        // Si le login que j'ai soumis est différent du login de ma base de donnée initiale
-        if($_POST["login"] != $row["login"]){
-            // Je me connecte a la base de donnée
-            $connexion = mysqli_connect("localhost", "root","","moduleconnexion");
-            // je modifie dans la table utilisateurs le login que je viens d'entrer et je vais le mettre dans la boite ou il y avait l'ancien login
-            $query = "UPDATE utilisateurs SET login = '".$_POST['login']."' WHERE utilisateurs.login='".$row['login']."' ";
-            $resultat = mysqli_query($connexion,$query);
-        }
-        if($_POST['prenom'] != $row['prenom']){
-			$connexion = mysqli_connect("localhost","root","","moduleconnexion");
-			$query = "UPDATE utilisateurs SET prenom = '".$_POST['prenom']."' WHERE utilisateurs.prenom='".$row['prenom']."'";
-		    $resultat = mysqli_query($connexion, $query);
-        }
-        if($_POST['nom'] != $row['nom']){
-		   $connexion = mysqli_connect("localhost","root","","moduleconnexion");
-		   $query = "UPDATE utilisateurs SET nom = '".$_POST['nom']."' WHERE utilisateurs.nom='".$row['nom']."'";
-		   $resultat = mysqli_query($connexion, $query);
-		}
-		if($_POST['password'] != $row['password']){
-		   $connexion = mysqli_connect("localhost","root","","moduleconnexion");
-		   $query = "UPDATE utilisateurs SET password = '".$_POST['password']."' WHERE utilisateurs.password='".$row['password']."'";
-		   $resultat = mysqli_query($connexion, $query);
-		}    
-    }
-} 
 
 
 ?>

@@ -45,7 +45,7 @@
     color: #ffdf00;
     text-align: center;
     font-size: 55px;
-    margin-bottom: 7%;
+    margin-bottom: 5%;
     animation: allblink 1.5s infinite;
     margin-top: 280px;
 }
@@ -193,7 +193,11 @@ li:hover .lien-index-menu{
 
 
 #form-co{
-    text-align: center;    
+    height: 200px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
 }
 
 .input-form-co{
@@ -231,7 +235,14 @@ li:hover .lien-index-menu{
     text-shadow: 1px 1px 5px magenta;
 }
 
-
+#error-co{
+    background-color: red;
+    color: white;
+    width: 390px;
+    margin: auto;
+    padding: 10px;
+    border: 1px ridge black;
+}
 
 
 
@@ -256,10 +267,11 @@ li:hover .lien-index-menu{
 }
 
 #form-log{
-   display: flex;
+    display: flex;
     flex-direction: column;
-    width: 200px;
+    width: 340px;
     margin: auto;
+    align-items: center;
 }
 
 .main-box2{
@@ -307,6 +319,15 @@ li:hover .lien-index-menu{
     text-shadow: 1px 1px 5px magenta;
 }
 
+#error-mod{
+    background-color: red;
+    color: white;
+    width: 300px;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px ridge black;
+}
 
 
 
@@ -326,7 +347,7 @@ li:hover .lien-index-menu{
 #form-sub{
     display: flex;
     flex-direction: column;
-    width: 299px;
+    width: 335px;
     margin: auto;
 }
 
@@ -377,6 +398,15 @@ li:hover .lien-index-menu{
     font-size: 20px;
     font-family: 'Saira Stencil One', cursive;
     text-shadow: 1px 1px 5px magenta;
+}
+
+#error-sub{
+    background-color: red;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 15px;
+    border: 1px ridge black;
 }
 
 
